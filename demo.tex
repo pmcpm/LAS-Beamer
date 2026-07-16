@@ -1,0 +1,412 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage[UTF8]{ctex}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning,fit}
+\usepackage[backend=biber,style=authoryear,maxcitenames=2]{biblatex}
+\addbibresource{refs.bib}
+
+\definecolor{nslPurple}{HTML}{642860}
+\usetheme[
+  accent=nslPurple,
+  progressbar=foot,
+  sectionpage=progressbar,
+  subsectionpage=progressbar,
+  numbering=fraction,
+  numberrail=subsection,
+  numberrailcolor=muted,
+  block=fill,
+  covered=transparent,
+  notes=hide,
+  toc=aftertitle,
+  closing=contact
+]{cookie}
+
+\title[双打 OU 对战智能体]{基于强化学习的双打OU对战智能体训练与策略优化研究}
+\subtitle{面向高强度竞技环境的自博弈学习、队伍协同建模与强劲AI对手构建}
+
+\author[盖欧卡\quad 固拉多\quad 故勒顿\quad 密勒顿\quad 太乐巴戈斯\quad 烈空坐\textsuperscript{*}]{盖欧卡\textsuperscript{1}\quad 固拉多\textsuperscript{1}\quad 故勒顿\textsuperscript{2}\quad 密勒顿\textsuperscript{2}\quad 太乐巴戈斯\textsuperscript{3}\quad 烈空坐\textsuperscript{*1}}
+
+\institute[丰缘生态研究院 / 帕底亚零区实验室 / 零之大空洞研究所]{%
+  \scriptsize
+  1. 丰缘地区海陆空环境与传说生态研究院\quad 丰缘地区琉璃市天空柱大道1号\quad 114514\\
+  2. 帕底亚第零区零区实验室古今生态与时空演化研究中心\quad 帕底亚地区第零区零区实验室\quad 191981\\
+  3. 帕底亚第零区零之大空洞结晶生命研究所\quad 帕底亚地区第零区零之大空洞\quad 191987
+}
+\date{2026年7月}
+\cookieconference{这里放会议名称/硕博论文答辩}
+\cookieheaderconference{这里放会议名称/硕博论文答辩}
+\cookielogo{assets/文献中心logo.png}
+\cookiefootlogo{assets/文献中心logo_白色.png}
+\cookieemail{rayquaza@sky-pillar.example}
+\cookieclosingtitle{感谢观看}
+\cookieclosingtext{欢迎交流与批评指正}
+
+\begin{document}
+
+\maketitle
+
+\section{模板全局结构}
+\subsection{封面元数据}
+
+\begin{frame}{封面信息与机构标识}{标题、副标题、作者、单位、会议名和 Logo 的组合}
+  \begin{columns}[T,onlytextwidth]
+    \column{.48\textwidth}
+      \begin{block}{首页展示的信息}
+        封面使用顶部会议栏、中心 Logo、标题区、作者区、单位区和日期区。标题区支持副标题；作者和单位可通过 Beamer 的短标题参数控制正文页与结尾页的显示长度。
+      \end{block}
+    \column{.48\textwidth}
+      \begin{cookiecard}[title=元数据命令]
+        \small
+        \texttt{\textbackslash title[短标题]\{论文题名\}}\\
+        \texttt{\textbackslash subtitle\{副标题\}}\\
+        \texttt{\textbackslash author[短作者]\{作者列表\}}\\
+        \texttt{\textbackslash institute[短单位]\{单位列表\}}\\
+        \texttt{\textbackslash cookieconference\{会议名\}}
+      \end{cookiecard}
+  \end{columns}
+
+  \note{说明封面字段与短标题字段的关系，提醒正式使用时替换虚构作者与单位。}
+\end{frame}
+
+\subsection{导航逻辑}
+
+\begin{frame}{顶栏和底栏的显示逻辑}{多级章节驱动结构导航}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \column{.42\textwidth}
+      \begin{nslrule}[结构输入]
+        使用 \texttt{\textbackslash section} 和 \texttt{\textbackslash subsection} 组织内容后，模板会自动生成章节页、小节页、正文顶栏和底栏导航。
+      \end{nslrule}
+
+      \begin{enumerate}
+        \item 顶栏左侧显示会议名称。
+        \item 顶栏中间显示当前章节。
+        \item 顶栏右侧显示当前小节和小节圆点。
+      \end{enumerate}
+
+    \column{.54\textwidth}
+      \begin{cookiecard}[title=本页可观察的导航元素]
+        \begin{itemize}
+          \item \textbf{页眉}: 会议名、章节标题、小节标题和小节进度。
+          \item \textbf{页脚}: 文献中心白色 Logo、章节圆点导航和页码。
+          \item \textbf{数字轨}: 帧标题左侧以“章节.小节”提示当前位置。
+        \end{itemize}
+      \end{cookiecard}
+      \vspace{.25cm}
+      \begin{exampleblock}{演示目的}
+        后续章节包含多个 section/subsection，用来观察底栏章节圆点如何随章节切换而变化。
+      \end{exampleblock}
+  \end{columns}
+\end{frame}
+
+\section{内容组件}
+\subsection{Block 与列表}
+
+\begin{frame}{Block 族与列表层级}{普通、警示、示例三类块}
+  \begin{columns}[T,onlytextwidth]
+    \column{.31\textwidth}
+      \begin{block}{普通 Block}
+        用于承载一般性说明、定义前置条件和页面中的稳定信息。
+      \end{block}
+
+    \column{.31\textwidth}
+      \begin{alertblock}{Alert Block}
+        用于提示风险、限制、关键假设或需要听众立即注意的内容。
+      \end{alertblock}
+
+    \column{.31\textwidth}
+      \begin{exampleblock}{Example Block}
+        用于展示案例、经验规则、可复用写法或正向结论。
+      \end{exampleblock}
+  \end{columns}
+
+  \vspace{.38cm}
+  \begin{columns}[T,onlytextwidth]
+    \column{.48\textwidth}
+      \textbf{有序列表}
+      \begin{enumerate}
+        \item 第一层结论。
+        \item 第二个步骤包含补充说明。
+      \end{enumerate}
+    \column{.48\textwidth}
+      \textbf{无序列表与子项}
+      \begin{itemize}
+        \item 主题发现
+        \item 证据组织
+          \begin{itemize}
+            \item 数据来源
+            \item 分析方法
+          \end{itemize}
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{定理、定义与证明环境}{沿用 Beamer 语义并接入主题配色}
+  \begin{columns}[T,onlytextwidth]
+    \column{.48\textwidth}
+      \begin{nslrule}[证据链]
+        若一个结论能够回溯到数据来源、处理步骤、指标定义和可视化解释，则称其具备可复核的生态证据链。
+      \end{nslrule}
+
+      \begin{nslclaim}[导航可解释性]
+        当章节、小节和页面编号同时可见时，听众更容易在长报告中保持当前位置感。
+      \end{nslclaim}
+
+    \column{.48\textwidth}
+      \begin{proof}
+        封面后的目录提供全局结构，章节页提供局部结构，正文顶栏给出当前小节，底栏给出章节进度和页码。四类线索互相补充，因此可降低跳页、问答和回看时的定位成本。
+      \end{proof}
+  \end{columns}
+\end{frame}
+
+\subsection{公式表格}
+
+\begin{frame}{公式与强调文本}{适合方法页和指标定义页}
+  \scriptsize
+  \begin{columns}[T,onlytextwidth]
+    \column{.66\textwidth}
+      \begin{block}{HP与CP的计算方法}
+        $\romvar{Base}$为种族值，$\romvar{DV}$为个体值，$\romvar{STATEXP}$为基础点数，$\romvar{Level}$为等级，$\romvar{Stats}$为能力值，$\romvar{GoPower}$为GO力量。
+      \end{block}
+      \vspace{-.18cm}
+      \begingroup
+      \setlength{\abovedisplayskip}{.25em}
+      \setlength{\belowdisplayskip}{.1em}
+      \fontsize{6.15}{6.85}\selectfont
+      \[
+        \begin{aligned}
+          \romvar{HP}
+          &=\left\lfloor
+          \frac{\left(\left(\romvar{Base}+\romvar{DV}\right)\times 2+
+          \left\lfloor \frac{\sqrt{\romvar{STATEXP}}}{4} \right\rfloor\right)
+          \times \romvar{Level}}{100}
+          \right\rfloor+\romvar{Level}+10 \\[.28em]
+          \romvar{CP}
+          &=\min\Bigg(
+          \Bigl\lfloor
+          \left(\sum{\romvar{Stats}}-\sum{\romvar{GoPower}}\right)
+          \times \frac{\romvar{Level}\times 6}{100} \\
+          &\hspace{5.2em}
+          +\sum{\romvar{GoPower}}\times
+          \left(\frac{\romvar{Level}\times 4}{100}+2\right)
+          \Bigr\rfloor,\;10000\Bigg)
+        \end{aligned}
+      \]
+      \endgroup
+
+    \column{.30\textwidth}
+      \begin{exampleblock}{讲述方式}
+        公式页不需要塞满推导；保留一个 \alert{可解释的核心式子}，再用简短文字说明变量含义。
+      \end{exampleblock}
+      \vspace{-.08cm}
+      \begingroup
+      \setbeamerfont{cookie quote}{size=\fontsize{7.3}{8.6},shape=\itshape}
+      \setbeamerfont{cookie quote author}{size=\fontsize{5.8}{6.6},series=\bfseries}
+      \begin{cookiequote}[模板提示]
+        结构负责定位，内容负责说服，留白负责让听众呼吸。
+      \end{cookiequote}
+      \endgroup
+  \end{columns}
+\end{frame}
+
+\begin{frame}{表格与宽版区域}{适合比较数据、实验设置和模板选项}
+  \begin{wide}
+    \begin{table}
+      \centering
+      \begin{tabularx}{.91\paperwidth}{lXXX}
+        \toprule
+        展示对象 & 推荐组件 & 适用场景 & 本模板效果 \\
+        \midrule
+        会议与机构信息 & 封面、顶栏、结尾页 & 学术报告、答辩、组会 & 统一露出会议名与中国科学院文献情报中心标识 \\
+        章节结构 & 目录、章节页、小节页、底栏 & 多章节报告 & 自动显示当前位置和章节进度 \\
+        关键结论 & block、alertblock、exampleblock & 结果页、方法页、结论页 & 与主色协调，避免额外自定义样式 \\
+        代码和算法 & cookiecode、algorithm2e & 技术路线、复现说明 & 无需 shell escape，可直接编译 \\
+        \bottomrule
+      \end{tabularx}
+    \end{table}
+  \end{wide}
+\end{frame}
+
+\section{复杂版式}
+\subsection{图示卡片}
+
+\begin{frame}{TikZ 图示与卡片组合}{用于方法框架、流程图和模块关系}
+  \begin{columns}[T,onlytextwidth]
+    \column{.58\textwidth}
+      \centering
+      \begin{tikzpicture}[
+        node distance=.62cm,
+        every node/.style={font=\small},
+        stage/.style={cookie accent node,minimum width=2.05cm,minimum height=.82cm,align=center},
+        plain/.style={cookie node,minimum width=1.95cm,minimum height=.78cm,align=center},
+        arrow/.style={cookie arrow}
+      ]
+        \node[stage] (a) {数据采集\\文献/专利/项目};
+        \node[plain,right=of a] (b) {语义建模\\主题嵌入};
+        \node[plain,right=of b] (c) {关系分析\\证据链};
+        \node[stage,below=of b] (d) {情报呈现\\报告/图谱/建议};
+        \draw[arrow] (a) -- (b);
+        \draw[arrow] (b) -- (c);
+        \draw[arrow] (b) -- (d);
+        \draw[arrow] (c) -- (d);
+      \end{tikzpicture}
+
+    \column{.38\textwidth}
+      \begin{cookiecard}[title=卡片一]
+        卡片适合放置旁注、局部结论、数据口径或读图提示。
+      \end{cookiecard}
+      \begin{cookiecard}[title=卡片二]
+        主题已内置节点、强调节点和箭头样式，适合快速绘制流程图。
+      \end{cookiecard}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[
+  bgimage=assets/文献中心logo.png,
+  bgfit=contain,
+  bgopacity=.10,
+  bgoverlay=white,
+  bgoverlayopacity=.62
+]{背景图帧与局部视觉强调}{使用 frame key 控制普通页面背景}
+  \begin{columns}[T,onlytextwidth]
+    \column{.52\textwidth}
+      \begin{block}{背景图参数}
+        普通正文页可使用 \texttt{bgimage}、\texttt{bgfit}、\texttt{bgopacity}、\texttt{bgoverlay} 和 \texttt{bgoverlayopacity} 设置局部背景。
+      \end{block}
+
+    \column{.42\textwidth}
+      \begin{exampleblock}{推荐用法}
+        背景图只承担氛围和品牌提示，不应压过正文内容。正式报告中建议保持低透明度。
+      \end{exampleblock}
+  \end{columns}
+\end{frame}
+
+\subsection{代码动画}
+
+\begin{frame}[fragile]{代码框与配置片段}{cookiecode 基于 listings 与 tcolorbox}
+  \begin{cookiecode}[title=template-config.py,listing options={style=cookiebare,language=Python,basicstyle=\ttfamily\scriptsize}]{Python}
+theme = "cookie"
+accent = "#642860"
+conference = "这里放会议名称/硕博论文答辩"
+logo = "assets/nsl-logo.png"
+footLogo = "assets/nsl-logo-white.png"
+
+sections = [
+    "模板全局结构",
+    "内容组件",
+    "复杂版式",
+    "引用与收束",
+]
+  \end{cookiecode}
+\end{frame}
+
+\begin{frame}{叠加动画与模态层}{覆盖层用于逐步讲解复杂关系}
+  \begin{columns}[T,onlytextwidth]
+    \column{.54\textwidth}
+      \begin{enumerate}
+        \item \cookiefocus<1>{第一步：确定问题边界。}
+        \item \cookiefocus<2>{第二步：补充数据与指标。}
+        \item \cookiefocus<3>{第三步：聚焦结论与解释。}
+      \end{enumerate}
+      \cookiereveal<2->{%
+        \begin{block}{逐步显示}
+          \texttt{\textbackslash cookiereveal} 会保留版面空间，适合在同一页逐步补充内容。
+        \end{block}
+      }
+
+    \column{.42\textwidth}
+      \begin{cookiecard}[title=覆盖层状态]
+        本页共有三个覆盖层。导出 PDF 后，动画会展开为连续页面，便于演示和打印。
+      \end{cookiecard}
+  \end{columns}
+
+  \begin{modal}<3>[模态层示例]
+    当前覆盖层可以把注意力集中到一个关键解释上，例如“为什么这一页需要暂停讨论”。
+  \end{modal}
+\end{frame}
+
+\begin{frame}{算法环境}{基于强化学习的双打 OU 对战智能体训练算法}
+  \vspace{.04cm}
+  \begin{wide}
+    \begin{algorithm}[H]
+      \caption{基于强化学习的双打 OU 对战智能体训练算法}
+      \KwIn{初始策略网络 $\pi_\theta$，价值网络 $V_\phi$，训练环境 $E$，经验回放池 $D$，最大训练轮数 $N$，折扣因子 $\gamma$，学习率 $\alpha$}
+      \KwOut{训练完成的双打 OU 对战智能体 $\pi_\theta^*$}
+      初始化策略网络参数 $\theta$ 与价值网络参数 $\phi$\;
+      初始化经验回放池 $D$\;
+      构建双打 OU 对战环境 $E$，包括队伍信息、招式信息、属性克制关系与场地状态\;
+      \For{训练轮数 $i=1$ \KwTo $N$}{
+        重置环境 $E$，获得初始状态 $s_0$\;
+        \While{当前对战未结束}{
+          根据当前状态 $s_t$，由策略网络 $\pi_\theta$ 生成动作概率分布\;
+          从合法动作集合中选择动作 $a_t$\;
+          在环境中执行动作 $a_t$，获得下一状态 $s_{t+1}$、奖励 $r_t$ 与终止标记 $done$\;
+          将转移样本 $(s_t,a_t,r_t,s_{t+1},done)$ 存入经验回放池 $D$\;
+          根据场上优势、剩余宝可梦数量、造成伤害、击倒对手和最终胜负计算综合奖励\;
+          令 $s_t \leftarrow s_{t+1}$\;
+        }
+        从经验回放池 $D$ 中采样一批训练样本\;
+        计算目标价值 $y_t=r_t+\gamma V_\phi(s_{t+1})$\;
+        计算优势函数 $A_t=y_t-V_\phi(s_t)$\;
+        根据优势函数更新策略网络参数 $\theta$，提高高收益动作的选择概率\;
+        根据目标价值 $y_t$ 更新价值网络参数 $\phi$，降低状态价值预测误差\;
+        定期将当前智能体与历史版本智能体进行自博弈，以提升策略稳定性\;
+        定期在固定测试队伍和随机对手队伍上评估智能体胜率\;
+      }
+      \KwRet 训练后的策略网络 $\pi_\theta^*$\;
+    \end{algorithm}
+  \end{wide}
+\end{frame}
+
+\cookieplain{一句话强调页：把关键结论留给一整页。}
+
+\section{引用与收束}
+\subsection{参考文献}
+
+\begin{frame}{引用与参考文献样式}{BibLaTeX 负责数据，主题负责视觉}
+  \begin{columns}[T,onlytextwidth]
+    \column{.52\textwidth}
+      \begin{block}{引用示例}
+        Beamer 的结构化页面适合技术报告和答辩场景 \parencite{beameruserguide}。本模板的视觉方向参考了 Cookie Beamer \parencite{cookiebeamer}，同时保留对 Metropolis 和 awesome-beamer 设计习惯的说明 \parencite{metropolis,awesomebeamer}。
+      \end{block}
+
+    \column{.42\textwidth}
+      \begin{cookiecard}[title=参考文献页]
+        文献数据写在 \texttt{refs.bib} 中；编译时运行 LuaLaTeX 与 Biber，即可生成文末参考文献。
+      \end{cookiecard}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{参考文献}
+  \printbibliography[heading=none]
+\end{frame}
+
+\subsection{使用建议}
+
+\begin{frame}{正式使用前的替换清单}{保留结构，替换内容}
+  \begin{columns}[T,onlytextwidth]
+    \column{.48\textwidth}
+      \begin{block}{必须替换}
+        \begin{enumerate}
+          \item 论文题名、副标题、作者和单位。
+          \item 会议名称或答辩场景名称。
+          \item 日期、通讯作者邮箱和参考文献数据。
+        \end{enumerate}
+      \end{block}
+
+    \column{.48\textwidth}
+      \begin{exampleblock}{建议保留}
+        \begin{enumerate}
+          \item 章节和小节命令，用于驱动导航。
+          \item 文献中心紫色主色与 Logo。
+          \item block、卡片、表格、代码框等主题组件。
+        \end{enumerate}
+      \end{exampleblock}
+  \end{columns}
+\end{frame}
+
+\end{document}
