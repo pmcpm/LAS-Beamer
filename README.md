@@ -146,8 +146,17 @@ latexmk -c
 | `closing` | `none`, `contact` | `none` | 是否自动生成结尾页 |
 | `covered` | `invisible`, `transparent` | `invisible` | 覆盖层未显示内容的处理方式 |
 | `notes` | `hide`, `show`, `second`, `only` | `hide` | 演讲者笔记输出方式 |
+| `titleleftmargin` | 长度表达式 | `.035\paperwidth` | 帧标题相对页面左边缘的固定左边距 |
+| `titlerightmargin` | 长度表达式 | `.055\paperwidth` | 帧标题右侧预留空间 |
+| `headerdotsraise` | 长度表达式 | `.25ex` | 顶栏小节圆点列的垂直微调量 |
 
 主题加载后，也可以用 `\cookieset{...}` 调整支持运行时修改的选项。
+
+顶栏会按当前章节的小节总数自动生成圆点；小节编号和圆点数量无需在主 `.tex` 中重复维护。顶栏文字使用受限宽度的横向排版，过长时自动缩放，不再依赖裁切窗口。帧标题使用固定页面左边距，默认比正文起点略向右缩进。一般内容稿只需设置主题选项和报告元数据；逐页内容无需编写页眉、标题边距或圆点位置代码。例如：
+
+```tex
+\usetheme[titleleftmargin=.07\paperwidth,headerdotsraise=.45ex]{cookie}
+```
 
 ## 元数据命令
 

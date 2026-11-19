@@ -78,6 +78,10 @@
 \def\cookie@closing{none}
 \def\cookie@covered{invisible}
 \def\cookie@notes{hide}
+% Layout controls: frame titles use a fixed inset from the paper edge.
+\def\cookie@titleleftmarginvalue{.035\paperwidth}
+\def\cookie@titlerightmarginvalue{.055\paperwidth}
+\def\cookie@headerdotsraise{.25ex}
 
 \pgfkeys{
   /cookie/.is family,
@@ -136,6 +140,9 @@
   notes/show/.code   = \def\cookie@notes{show},
   notes/second/.code = \def\cookie@notes{second},
   notes/only/.code   = \def\cookie@notes{only},
+  titleleftmargin/.code  = \def\cookie@titleleftmarginvalue{#1},
+  titlerightmargin/.code = \def\cookie@titlerightmarginvalue{#1},
+  headerdotsraise/.code  = \def\cookie@headerdotsraise{#1},
   accent/.code      = \colorlet{cookieAccent}{#1},
   coloraccent/.code = \colorlet{cookieAccent}{#1},
   % Compatibility with common awesome-beamer options.
@@ -594,16 +601,16 @@
   \begingroup
   \@tempcnta=\cookie@subsectiontotal\relax
   \ifnum\@tempcnta<1\relax\@tempcnta=1\relax\fi
-  \begin{tikzpicture}[x=.32cm,y=.32cm,baseline=(cookie@dotsbase.base)]
+  \begin{tikzpicture}[x=.38cm,y=.38cm,baseline=(cookie@dotsbase.base)]
     \node[inner sep=0pt,outer sep=0pt] (cookie@dotsbase) at (0,0) {};
     \foreach \i in {1,...,\the\@tempcnta}{%
       \ifnum\i=\value{subsection}\relax
-        \fill[white] (\i,0) circle[radius=.065cm];
+        \fill[white] (\i,0) circle[radius=.085cm];
       \else
         \ifnum\i<\value{subsection}\relax
-          \fill[white,opacity=.55] (\i,0) circle[radius=.043cm];
+          \fill[white,opacity=.55] (\i,0) circle[radius=.060cm];
         \else
-          \draw[white,opacity=.72,line width=.50pt] (\i,0) circle[radius=.050cm];
+          \draw[white,opacity=.72,line width=.60pt] (\i,0) circle[radius=.065cm];
         \fi
       \fi
     }%
@@ -614,34 +621,22 @@
   \ifnum\value{section}>0\relax
     \leavevmode
     \begin{beamercolorbox}[wd=\paperwidth,ht=3.05ex,dp=1.05ex]{cookie headline}%
-      \settowidth{\cookie@headerconfwidth}{{\fontsize{7.2}{8.5}\selectfont\bfseries\insertcookieheaderconference}}%
-      \ifdim\cookie@headerconfwidth>.345\paperwidth
-        \setlength{\cookie@headerconfwidth}{.345\paperwidth}%
-      \fi
-      \begin{tikzpicture}[remember picture,overlay]
-        \coordinate (cookieconfstart) at ($(current page.north west)+(.030\paperwidth,-2.02ex)$);
-        \begin{scope}
-          \clip ([xshift=-.001\paperwidth,yshift=-.86ex]cookieconfstart)
-            rectangle ([xshift=.350\paperwidth,yshift=.86ex]cookieconfstart);
-          \node[anchor=west,text=white,font=\fontsize{7.2}{8.5}\selectfont\bfseries,inner sep=0pt]
-            at (cookieconfstart)
-            {\insertcookieheaderconference};
-        \end{scope}
-        \coordinate (cookieconfend) at ([xshift=\cookie@headerconfwidth]cookieconfstart);
-        \draw[white!48,line width=.45pt]
-          ([xshift=.014\paperwidth,yshift=.92ex]cookieconfend)
-          -- ([xshift=.014\paperwidth,yshift=-.78ex]cookieconfend);
-        \node[anchor=center,text=white,font=\fontsize{7.2}{8.5}\selectfont\bfseries,inner sep=0pt]
-          at ($(current page.north)+(0,-2.02ex)$)
-          {\adjustbox{max width=.260\paperwidth}{\insertsectionhead}};
-        \node[anchor=east,text=white,font=\fontsize{7.2}{8.5}\selectfont\bfseries,inner sep=0pt]
-          at ($(current page.north east)+(-.150\paperwidth,-2.02ex)$)
-          {\adjustbox{max width=.285\paperwidth}{\cookie@headersubsectionlabel}};
-        \node[anchor=east,inner sep=0pt]
-          at ($(current page.north east)+(-.026\paperwidth,-1.86ex)$)
-          {\cookie@headersubsectiondots};
-      \end{tikzpicture}%
-      \vphantom{\fontsize{7.2}{8.5}\selectfont\bfseries A}%
+      \hbox to \paperwidth{%
+        \hskip.030\paperwidth
+        {\color{white}\fontsize{7.2}{8.5}\selectfont\bfseries
+          \adjustbox{max width=.285\paperwidth}{\insertcookieheaderconference}}%
+        \hskip.014\paperwidth
+        {\color{white!48}\rule{.45pt}{1.65ex}}%
+        \hfill
+        {\color{white}\fontsize{7.2}{8.5}\selectfont\bfseries
+          \adjustbox{max width=.245\paperwidth}{\insertsectionhead}}%
+        \hfill
+        {\color{white}\fontsize{7.2}{8.5}\selectfont\bfseries
+          \adjustbox{max width=.270\paperwidth}{\cookie@headersubsectionlabel}}%
+        \hskip.012\paperwidth
+        {\raisebox{\cookie@headerdotsraise}{\adjustbox{max width=.115\paperwidth}{\cookie@headersubsectiondots}}}%
+        \hskip.018\paperwidth
+      }%
     \end{beamercolorbox}%
   \fi
 }
@@ -809,8 +804,10 @@
 \newdimen\cookie@numberrailwidth
 \newdimen\cookie@frametitlegap
 \newcommand{\cookie@setframetitledimensions}{%
-  \cookie@frametitleleftmargin=.105\paperwidth
-  \cookie@frametitlerightmargin=.055\paperwidth
+  \cookie@frametitleleftmargin=\cookie@titleleftmarginvalue
+  % Compensate for the title band's full-width shift; the visible inset remains fixed.
+  \advance\cookie@frametitleleftmargin by \beamer@leftmargin
+  \cookie@frametitlerightmargin=\cookie@titlerightmarginvalue
   \cookie@numberrailwidth=0pt
   \cookie@frametitlegap=0pt
 }
